@@ -1,6 +1,48 @@
-let app = new Vue({
-   el: '#app',
-   data: {
+Vue.component('product', {
+   props: {
+       premium: {
+           type: Boolean,
+           required: true
+       }
+   },
+   template: `
+   <div class="product">
+    <div class="product-image">
+           <img :src="variants[selectedVariant].variantImage" :alt="altText" />
+       </div>
+       <div class="product-info">
+           <h1>{{ title }}</h1>
+           <p>{{ sale }}</p>
+           <p>{{ description }}</p>
+           <a :href="link">More products like this</a>
+           <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
+           <p v-else>Out of stock</p>
+           <p v-if="inStock">In stock</p>
+           <p v-else :class="{ 'out-of-stock': !inStock }">Out of Stock</p>
+           <product-details :details="details"></product-details>
+           <p>Shipping: {{ shipping }}</p>
+           <div
+           class="color-box"
+           v-for="(variant, index) in variants"
+           :key="variant.variantId"
+           :style="{ backgroundColor:variant.variantColor }"
+           @mouseover="updateProduct(index)"
+           >
+           </div>
+           <ul>
+            <li v-for="size in sizes">{{ size }}</li>
+           </ul>
+           <div class="cart">
+            <p>Cart({{ cart }})</p>
+           </div>
+           <button v-on:click="addToCart":disabled="!inStock":class="{ disabledButton: !inStock }">Add to cart</button>
+           <button v-on:click="decreaseCart">Decrease</button>
+           
+       </div>
+   </div>
+ `,
+    data() {
+        return {
        product: "Socks",
        brand: 'Vue Mastery',
        selectedVariant: 0,
@@ -25,7 +67,7 @@ let app = new Vue({
 ],
        sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
        cart: 0,
-
+        }
    },
    methods: {
    addToCart() {
@@ -56,11 +98,34 @@ let app = new Vue({
     } else {
         return this.brand + ' ' + this.product + ' is not on sale';
     }
+   },
+   shipping() {
+   if (this.premium) {
+       return "Free";
+   } else {
+       return 2.99
    }
+   },
 
    }  
 
-
 })
+
+Vue.component('product-details', {
+    props: ['details'],
+    template: `
+    <ul>
+    <li v-for="detail in details">{{ detail }}</li>
+    </ul>
+    `
+})
+
+let app = new Vue({
+   el: '#app',
+   data: {
+       premium: true
+   }
+})
+
 
 
