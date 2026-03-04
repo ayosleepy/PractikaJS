@@ -16,6 +16,8 @@ Vue.component('product', {
            <h1>{{ title }}</h1>
            <p>{{ sale }}</p>
            <p>{{ description }}</p>
+           <p>Pair: {{ pair }}</p>
+           <p>Length: {{ length }}</p>
            <a :href="link">More products like this</a>
            <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
            <p v-else>Out of stock</p>
@@ -36,7 +38,7 @@ Vue.component('product', {
            </ul>
            <button v-on:click="addToCart":disabled="!inStock":class="{ disabledButton: !inStock }">Add to cart</button>
            <button v-on:click="decreaseCart">Decrease</button>
-           <button v-on:click="removeFromCart">Remove from cart</button>
+           <button v-on:click="removeFromCart">Remove</button>
            <product-tabs 
            :reviews="reviews"
            :details="details"
@@ -54,6 +56,8 @@ Vue.component('product', {
        description: "A pair of warm, fuzzy socks",
        link: "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks",
        onSale: true,
+       pair: '2 socks',
+       length: 'Medium',
        details: ['80% cotton', '20% polyester', 'Gender-neutral'],
        variants: [
    {
